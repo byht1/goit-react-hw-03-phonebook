@@ -4,6 +4,8 @@ import ContactForm from './Phonebook/ContactForm/ContactForm';
 import ContactList from './Phonebook/ContactList/ContactList';
 import { Section, Containet, H1, DivList } from './App.stiled';
 
+const L_KEY = 'contacts-list';
+
 export default class App extends Component {
   state = {
     contacts: [
@@ -14,6 +16,20 @@ export default class App extends Component {
     ],
     fillet: '',
   };
+
+  componentDidMount() {
+    const local = localStorage.getItem(L_KEY);
+    if (local !== null) {
+      this.setState({ contacts: JSON.parse(local) });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    const nextState = this.state.contacts;
+    if (prevState.Component !== nextState) {
+      localStorage.setItem(L_KEY, JSON.stringify(nextState));
+    }
+  }
 
   newContacts = newObj => {
     if (this.state.contacts.some(x => x.name === newObj.name)) {
